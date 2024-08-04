@@ -1,0 +1,57 @@
+let currentPlayer = 'X';
+let gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+function handleCellClick(index) {
+    if (gameBoard[index] !== '') {
+        return;
+    }
+
+    gameBoard[index] = currentPlayer;
+    document.getElementById(`cell-${index}`).innerText = currentPlayer;
+
+    if (checkForWin()) {
+        alert(`Player ${currentPlayer} wins!`);
+        resetGame();
+    } else {
+        // Switch player
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+}
+
+function checkForWin() {
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    for (let i = 0; i < winningCombinations.length; i++) {
+        const combination = winningCombinations[i];
+        if (gameBoard[combination[0]] === gameBoard[combination[1]] &&
+            gameBoard[combination[1]] === gameBoard[combination[2]] &&
+            gameBoard[combination[0]] !== '') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function resetGame() {
+    currentPlayer = 'X';
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+    for (let i = 0; i < 9; i++) {
+        document.getElementById(`cell-${i}`).innerText = '';
+    }
+}
+
+for (let i = 0; i < 9; i++) {
+    document.getElementById(`cell-${i}`).addEventListener('click', () => handleCellClick(i));
+}
+document.getElementById('reset-button').addEventListener('click', resetGame);
